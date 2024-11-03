@@ -88,3 +88,6 @@ INSERT INTO `cards` VALUES (53, 'El Arpa', 'el_arpa.jpg', 1);
 INSERT INTO `cards` VALUES (54, 'La Rana', 'la_rana.jpg', 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+
