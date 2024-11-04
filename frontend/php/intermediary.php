@@ -59,6 +59,18 @@ if(isset($data->endpoint)){
         }
         
     }
+    else if ($data->endpoint == "singLottery" && $data->method == "POST"){
+        $url = "http://localhost/Examen3DWM/backend/services/lottery/?action=singLottery";
+        $method = "POST";
+        $data = json_encode(array("id"=>$data->id));
+        $auth = "12345";
+        $response = curlPHP($url,$method,$data,$auth);
+        $response = json_decode($response);
+        $array = array("status"=>$response->status,"message"=>$response->message);
+        echo json_encode($array,UTF8);
+        die();
+    }
+    
 } else {
     $array = array("status"=>404,"message"=>"Not Found");
     echo json_encode($array,UTF8);
