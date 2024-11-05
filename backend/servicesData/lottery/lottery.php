@@ -11,3 +11,18 @@ function getLottery($conn, $numCards, $cardID){
     return $row;
 }
 
+function insertCard($conn, $data){
+    $stmt = $conn->prepare("INSERT INTO cards (name, image) VALUES (?,?)");
+    $stmt->bind_param("ss", $data->name, $data->image);
+    if($stmt->execute()){
+        $res=array(
+            "id"=>$conn->insert_id,
+			"name"=>$data->name,
+            "image"=>$data->image
+        );
+        return json_encode($res,UTF8);
+    } else {
+        echo "Error: ".$stmt->error;
+    }
+}
+

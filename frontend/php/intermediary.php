@@ -35,7 +35,7 @@ function curlPHP($url,$metodo,$datos,$auth){
 $data = json_decode(file_get_contents("php://input"));
 if(isset($data->endpoint)){
     if($data->endpoint == "getLottery" && $data->method == "GET"){
-        $url = "http://localhost/Examen3DWM/backend/services/lottery/?action=getLottery";
+        $url = "http://localhost/Examen3DWM/backend/services/lottery/?numCards=16";
         $method = "GET";
         $data = "";
         $auth = "12345";
@@ -60,7 +60,7 @@ if(isset($data->endpoint)){
         
     }
     else if ($data->endpoint == "singLottery" && $data->method == "POST"){
-        $url = "http://localhost/Examen3DWM/backend/services/lottery/?action=singLottery";
+        $url = "http://localhost/Examen3DWM/backend/services/lottery/";
         $method = "POST";
         $data = json_encode(array("id"=>$data->id));
         $auth = "12345";
