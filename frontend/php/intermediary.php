@@ -34,41 +34,51 @@ function curlPHP($url,$metodo,$datos,$auth){
 
 $data = json_decode(file_get_contents("php://input"));
 if(isset($data->endpoint)){
-    if($data->endpoint == "getLottery" && $data->method == "GET"){
-        $url = "http://localhost/Examen3DWM/backend/services/lottery/?numCards=16";
-        $method = "GET";
-        $data = "";
-        $auth = "12345";
-        $response = curlPHP($url,$method,$data,$auth);
-        $response = json_decode($response);
-        $html = "";
-
-        if(isset($response->status) && $response->status == 200){
-            $counter = 0;
-            foreach($response->data as $card){
-                if($counter % 4 == 0) $html .= "<tr>";
-                $html .= "<td>";
-                $html .= "<img src='..\..\backend\img\lottery\\".$card->image."' width='120' height='150' alt='$card->name'>";
-                $html .= "</td>";
-                if($counter % 4 == 3) $html .= "</tr>";
-                $counter++;             
+    if($data->method == "GET"){
+        if($data->endpoint == "getLottery"){
+            $url = "http://localhost/Examen3DWM/backend/services/lottery/?numCards=16";
+            $method = "GET";
+            $data = "";
+            $auth = "12345";
+            $response = curlPHP($url,$method,$data,$auth);
+            $response = json_decode($response);
+            $html = "";
+    
+            if(isset($response->status) && $response->status == 200){
+                $counter = 0;
+                foreach($response->data as $card){
+                    if($counter % 4 == 0) $html .= "<tr>";
+                    $html .= "<td>";
+                    $html .= "<img src='..\..\backend\img\lottery\\".$card->image."' width='120' height='160' alt='$card->name'>";
+                    $html .= "</td>";
+                    if($counter % 4 == 3) $html .= "</tr>";
+                    $counter++;             
+                }
+                $array = array("status"=>200,"data"=>$html);
+                echo json_encode($array,UTF8);
+                die();
             }
-            $array = array("status"=>200,"data"=>$html);
-            echo json_encode($array,UTF8);
-            die();
+        } else if ($data->endpoint == "getCards"){
+            $url = "http://localhost/Examen3DWM/backend/services/lottery/";
+            $method = "GET";
+            $data = "";
+            $auth = "12345";
+            $response = curlPHP($url,$method,$data,$auth);
+            $response = json_decode($response);
+            $html = "";
+    
+            if(isset($response->status) && $response->status == 200){
+                $cards = array();
+                foreach($response->data as $card){
+                    $html = "<img src='..\..\backend\img\lottery\\".$card->image."' width='180' height='240' alt='$card->name'>";
+                    array_push($cards,$html);
+                }
+                $array = array("status"=>200,"data"=>$cards);
+                echo json_encode($array,UTF8);
+                die();
+            }
         }
         
-    }
-    else if ($data->endpoint == "singLottery" && $data->method == "POST"){
-        $url = "http://localhost/Examen3DWM/backend/services/lottery/";
-        $method = "POST";
-        $data = json_encode(array("id"=>$data->id));
-        $auth = "12345";
-        $response = curlPHP($url,$method,$data,$auth);
-        $response = json_decode($response);
-        $array = array("status"=>$response->status,"message"=>$response->message);
-        echo json_encode($array,UTF8);
-        die();
     }
     
 } else {

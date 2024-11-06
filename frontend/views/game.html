@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/g_styles.css">
+    <link rel="stylesheet" href="../css/game_styles.css">
 </head>
 <body>
     <div class="container">
@@ -15,15 +15,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="button-container">
-            <button id="sing-cards" class="btn-action">
+        <div class="card-container">
+            <div id="current-card">
+                
+            </div>
+            <button id="sing-lottery" class="btn-action">
                 Cantar cartas
             </button>
+        </div>
+        <div class="button-container">
             <button id="search-card" class="btn-action">
                 Buscar carta
+            </button>
+            <button id="add-card" class="btn-action">
+                Agregar carta
             </button>
         </div>
     </div>
 </body>
-<script src="../js/game.js "></script>
+<script src="../js/lottery.js "></script>
 </html>
