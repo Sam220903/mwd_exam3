@@ -70,12 +70,30 @@ if(isset($data->endpoint)){
             if(isset($response->status) && $response->status == 200){
                 $cards = array();
                 foreach($response->data as $card){
-                    $html = "<img src='..\..\backend\img\lottery\\".$card->image."' width='180' height='240' alt='$card->name'>";
+                    $html = "<img src='..\..\backend\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
                     array_push($cards,$html);
                 }
                 $array = array("status"=>200,"data"=>$cards);
                 echo json_encode($array,UTF8);
                 die();
+            }
+        } else if ($data->endpoint == "getCardbyID"){
+            if(isset($data->cardID)){
+                $url = "http://localhost/Examen3DWM/backend/services/lottery/?cardID=".$data->cardID;
+                $method = "GET";
+                $data = "";
+                $auth = "12345";
+                $response = curlPHP($url,$method,$data,$auth);
+                $response = json_decode($response);
+                $html = "";
+        
+                if(isset($response->status) && $response->status == 200){
+                    $card = $response->data[0];
+                    $html = "<img src='..\..\backend\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
+                    $array = array("status"=>200,"data"=>$html);
+                    echo json_encode($array,UTF8);
+                    die();
+                }
             }
         }
         

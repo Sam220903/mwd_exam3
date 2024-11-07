@@ -30,6 +30,7 @@ body {
 .card-container{
     grid-area: cards;
     margin: 10px;
+
 }
 
 .button-container{
@@ -50,15 +51,14 @@ body {
     font-size: 40px;
     font-weight: 700;
     cursor: pointer;
-    transition: 50ms;
+    transition: background-color 50ms, color 50ms, transform 50ms;
     margin: 30px;
 }
 
 .btn-action:hover{
     background-color: #1b5388;
     color: #F7D763;
-    font-size: 42px;
-    transition: 50ms;
+    transform: scale(1.05);
 }
 
 .card-board table#cards {
@@ -75,7 +75,83 @@ body {
     cursor: pointer;        
 }
 
-#current-card{
+#current-card {
     width: 70px;
     height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#chosen-card {
+    border-width: 10px;
+    border-color: #1b5388;
+    border-radius: 10px;
+    margin: auto; 
+}
+
+.modal{
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 200px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); 
+}
+
+.modal-content {
+    position: relative;
+    background-color: #313D65;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 25%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #F5EF55;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+#found-card{
+    display: flex;
+    justify-content: center;
+}
+
+.modal-content h2{
+    color: #F5EF55;
+    font-weight: 500;
+    text-align: center;
+}
+
+#modal-form-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#form-card button.btn-action{
+    font-size: 20px;
+    font-weight: 300;
 }

@@ -59,9 +59,10 @@ async function getCards(){
     .catch(error => console.log('error', error));
 }
     
-
+let running = false;
 function singLottery(){
-    if (cards.length >  0) {
+    if (cards.length > 0 && !running) {
+        running = true;
         let index = 0;
         document.getElementById('current-card').innerHTML = cards[index];
         index++;
@@ -75,9 +76,78 @@ function singLottery(){
             }
         }, 5000);
     }
+    running = false;
 }
+
+let modal_card = document.getElementById('modal-card');
+let close_modal = document.getElementById('close-modal');
+
+async function getCardbyID(){
+    let id = prompt('Ingrese el id de la carta');
+
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", "12345");
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify({
+            endpoint: 'getCardbyID',
+            method: 'GET',
+            cardID : id
+        }),
+        redirect: 'follow'
+    };
+
+    await fetch("http://localhost/Examen3DWM/frontend/php/intermediary.php", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+        const data = JSON.parse(result);
+        console.log(result);
+        if (data.status!=200){
+            throw new Error(data.message);
+        }else{
+            //alert(data.data);
+            modal_card.style.display = 'block';
+            document.getElementById('found-card').innerHTML = data.data;
+        }
+
+    })
+
+}
+
+close_modal.addEventListener('click', () => {
+    modal_card.style.display = 'none';
+});
+
+
+let modal_form = document.getElementById('modal-form');
+let close_form = document.getElementById('close-form');
+
+close_form.addEventListener('click', () => {
+    modal_form.style.display = 'none';
+});
+
+
+
+window.addEventListener("click",function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+});
 
 getLottery();
 getCards();
 
 document.getElementById('sing-lottery').addEventListener('click', singLottery);
+
+document.getElementById('search-card').addEventListener('click', (e) => {
+    e.preventDefault();
+    getCardbyID();
+});
+
+document.getElementById('add-card').addEventListener('click', (e) => {
+    e.preventDefault();
+    modal_form.style.display = 'block';
+});
