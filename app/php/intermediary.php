@@ -36,7 +36,7 @@ $data = json_decode(file_get_contents("php://input"));
 if(isset($data->endpoint)){
     if($data->method == "GET"){
         if($data->endpoint == "getLottery"){
-            $url = "http://localhost/Examen3DWM/backend/services/lottery/?numCards=16";
+            $url = "http://localhost/Examen3DWM/api/services/lottery/?numCards=16";
             $method = "GET";
             $data = "";
             $auth = "12345";
@@ -49,7 +49,7 @@ if(isset($data->endpoint)){
                 foreach($response->data as $card){
                     if($counter % 4 == 0) $html .= "<tr>";
                     $html .= "<td>";
-                    $html .= "<img src='..\..\backend\img\lottery\\".$card->image."' width='120' height='160' alt='$card->name'>";
+                    $html .= "<img src='..\..\api\img\lottery\\".$card->image."' width='120' height='160' alt='$card->name'>";
                     $html .= "</td>";
                     if($counter % 4 == 3) $html .= "</tr>";
                     $counter++;             
@@ -59,7 +59,7 @@ if(isset($data->endpoint)){
                 die();
             }
         } else if ($data->endpoint == "getCards"){
-            $url = "http://localhost/Examen3DWM/backend/services/lottery/";
+            $url = "http://localhost/Examen3DWM/api/services/lottery/";
             $method = "GET";
             $data = "";
             $auth = "12345";
@@ -70,7 +70,7 @@ if(isset($data->endpoint)){
             if(isset($response->status) && $response->status == 200){
                 $cards = array();
                 foreach($response->data as $card){
-                    $html = "<img src='..\..\backend\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
+                    $html = "<img src='..\..\api\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
                     array_push($cards,$html);
                 }
                 $array = array("status"=>200,"data"=>$cards);
@@ -79,7 +79,7 @@ if(isset($data->endpoint)){
             }
         } else if ($data->endpoint == "getCardbyID"){
             if(isset($data->cardID)){
-                $url = "http://localhost/Examen3DWM/backend/services/lottery/?cardID=".$data->cardID;
+                $url = "http://localhost/Examen3DWM/api/services/lottery/?cardID=".$data->cardID;
                 $method = "GET";
                 $data = "";
                 $auth = "12345";
@@ -89,18 +89,62 @@ if(isset($data->endpoint)){
         
                 if(isset($response->status) && $response->status == 200){
                     $card = $response->data[0];
-                    $html = "<img src='..\..\backend\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
+                    $html = "<img src='..\..\api\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
                     $array = array("status"=>200,"data"=>$html);
                     echo json_encode($array,UTF8);
                     die();
                 }
             }
+        } else {
+            $array = array("status"=>404,"message"=>"Not Found");
+            echo json_encode($array,UTF8);
+            die();
         }
         
+    } else if ($data->method = "POST"){
+        if($data->endpoint == "addCard"){
+            if(isset($data->name) && isset($data->image)){
+                $url = "http://localhost/Examen3DWM/api/services/lottery/";
+                $method = "POST";
+                $image = saveImage($data->image);
+                $data = json_encode(array("name"=>$data->name,"image"=>$image));
+                $auth = "12345";
+                $response = curlPHP($url,$method,$data,$auth);
+                $response = json_decode($response);
+        
+                if(isset($response->status) && $response->status == 200){
+                    $array = array("status"=>200,"message"=>"Carta agregada correctamente");
+                    echo json_encode($array,UTF8);
+                    die();
+                } else {
+                    $array = array("status"=>404,"message"=>"Error al agregar la carta");
+                    echo json_encode($array,UTF8);
+                    die();
+                }
+            }
+        } else {
+            $array = array("status"=>404,"message"=>"Error al agregar la carta");
+            echo json_encode($array,UTF8);
+            die();
+        }
+    } else {
+        $array = array("status"=>404,"message"=>"Acción desconocida");
+        echo json_encode($array,UTF8);
+        die();
+
     }
     
 } else {
-    $array = array("status"=>404,"message"=>"Not Found");
+    $array = array("status"=>404,"message"=>"Endpoint no encontrado");
     echo json_encode($array,UTF8);
     die();
+}
+
+function saveImage($image){
+    $image_parts = explode(";base64,", $image);
+    $image_base64 = base64_decode($image_parts[1]);
+    $file_name = uniqid().".jpg";
+    $file = "../../api/img/lottery/".$file_name;
+    file_put_contents($file, $image_base64);
+    return $file_name;
 }

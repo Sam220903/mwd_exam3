@@ -13,7 +13,7 @@ async function getLottery(){
         redirect: 'follow'
     };
 
-    await fetch("http://localhost/Examen3DWM/frontend/php/intermediary.php", requestOptions)
+    await fetch("http://localhost/Examen3DWM/app/php/intermediary.php", requestOptions)
     .then((response) => response.text())
     .then((result) => {
         const data = JSON.parse(result);
@@ -45,7 +45,7 @@ async function getCards(){
         redirect: 'follow'
     };
 
-    await fetch("http://localhost/Examen3DWM/frontend/php/intermediary.php", requestOptions)
+    await fetch("http://localhost/Examen3DWM/app/php/intermediary.php", requestOptions)
     .then((response) => response.text())
     .then((result) => {
         const data = JSON.parse(result);
@@ -100,7 +100,7 @@ async function getCardbyID(){
         redirect: 'follow'
     };
 
-    await fetch("http://localhost/Examen3DWM/frontend/php/intermediary.php", requestOptions)
+    await fetch("http://localhost/Examen3DWM/app/php/intermediary.php", requestOptions)
     .then((response) => response.text())
     .then((result) => {
         const data = JSON.parse(result);
@@ -130,10 +130,10 @@ close_form.addEventListener('click', () => {
 });
 
 
-
 window.addEventListener("click",function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    if (event.target == modal_form || event.target == modal_card) {
+        modal_form.style.display = 'none';
+        modal_card.style.display = 'none';
     }
 });
 
@@ -151,3 +151,54 @@ document.getElementById('add-card').addEventListener('click', (e) => {
     e.preventDefault();
     modal_form.style.display = 'block';
 });
+
+
+const form = document.getElementById('form-card');
+async function addCard(){
+    const formData = new FormData(form);
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", "12345");
+    myHeaders.append("Content-Type", "application/json");
+
+    let base64 = await getBase64(formData.get('img'));
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify({
+            endpoint: 'addCard',
+            method: 'POST',
+            name: formData.get('name'),
+            image: base64
+        }),
+        redirect: 'follow'
+    };
+
+    await fetch("http://localhost/Examen3DWM/app/php/intermediary.php", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+        const data = JSON.parse(result);
+        console.log(result);
+        if (data.status!=200){
+            throw new Error(data.message);
+        }else{
+            alert(data.message);
+        }
+    })
+}
+
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addCard();
+    modal_form.style.display = 'none';
+});
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
+}

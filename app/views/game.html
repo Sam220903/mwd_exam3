@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/gamestyles.css">
+    <link rel="stylesheet" href="../css/game_styles.css">
 </head>
 <body>
     <div class="container">
@@ -44,14 +44,16 @@
         <div id="modal-form" class="modal">
             <div id="modal-form-content" class="modal-content">
                 <span id="close-form" class="close-modal">&times;</span>
-                <h2>Agregar carta:</h2>
-                <form id="form-card">
-                    <label for="new-card-name">Nombre:</label>
-                    <input type="text" id="new-card-name" name="new-card-name" required>
-                    <label for="new-card-img">Imagen:</label>
-                    <input type="file" name="new-card-img" id="new-card-img">
-                    <button type="submit" class="btn-action">Agregar</button>
-                </form>
+                <div id="form-container">
+                    <h2>Agregar carta:</h2>
+                    <form id="form-card">
+                        <label for="name">Nombre:</label>
+                        <input type="text" id="name" name="name" required>
+                        <label for="img">Imagen:</label>
+                        <input type="file" name="img" id="img">
+                        <button type="submit" class="btn-action">Agregar</button>
+                    </form>
+                </div>
             </div>
         </div>
 

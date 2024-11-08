@@ -144,14 +144,29 @@ body {
     text-align: center;
 }
 
-#modal-form-content{
+#form-container{
+    width: 80%;
+    margin: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+}
+
+#form-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #form-card button.btn-action{
     font-size: 20px;
     font-weight: 300;
+}
+
+form#form-card{
+    color: #F4E88F;  
+}
+
+form#form-card button{
+    background-color: #141630;
 }
