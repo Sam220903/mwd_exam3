@@ -17,12 +17,13 @@ async function getLottery(){
     .then((response) => response.text())
     .then((result) => {
         const data = JSON.parse(result);
-        const result1 = data.data;
-        console.log(result);
+        const cards = data.data;
+        console.log(cards);
         if (data.status!=200){
             throw new Error(data.message);
         }else{
-            document.getElementById('lottery').innerHTML = result1;
+            let lottery = buildHTMLLottery(cards);
+            document.getElementById('lottery').innerHTML = lottery;
         }
 
     })
@@ -49,7 +50,7 @@ async function getCards(){
     .then((response) => response.text())
     .then((result) => {
         const data = JSON.parse(result);
-        console.log(result);
+        console.log(data.data);
         if (data.status!=200){
             throw new Error(data.message);
         } else {
@@ -64,12 +65,12 @@ function singLottery(){
     if (cards.length > 0 && !running) {
         running = true;
         let index = 0;
-        document.getElementById('current-card').innerHTML = cards[index];
+        document.getElementById('current-card').innerHTML = buildHTMLCard(cards[index]);
         index++;
         const interval = setInterval(() => {
             if (index < cards.length) {
                 console.log(cards[index]);
-                document.getElementById('current-card').innerHTML = cards[index];
+                document.getElementById('current-card').innerHTML = buildHTMLCard(cards[index]);
                 index++;
             } else {
                 clearInterval(interval);
@@ -104,13 +105,13 @@ async function getCardbyID(){
     .then((response) => response.text())
     .then((result) => {
         const data = JSON.parse(result);
-        console.log(result);
+        const card = data.data;
+        console.log(card);
         if (data.status!=200){
             throw new Error(data.message);
         }else{
-            //alert(data.data);
             modal_card.style.display = 'block';
-            document.getElementById('found-card').innerHTML = data.data;
+            document.getElementById('found-card').innerHTML = buildHTMLCard(card);
         }
 
     })
@@ -201,4 +202,21 @@ function getBase64(file) {
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
     });
+}
+
+function buildHTMLLottery(cards){
+    let html = "";
+    let counter = 0;
+    cards.forEach(card => {
+        if (counter % 4 == 0) html += "<tr>";
+        html += "<td><img src='..\\..\\api\\img\\lottery\\"+card.image+"' width='120' height='160' alt='"+card.name+"'></td>";
+        if (counter % 4 == 3) html += "</tr>";
+        counter++;
+    });
+    return html;
+}
+
+function buildHTMLCard(card){
+    let html = "<img src='..\\..\\api\\img\\lottery\\"+card.image+"' id='chosen-card' width='180' height='240' alt='"+card.name+"'>";
+    return html;
 }

@@ -42,9 +42,10 @@ if(isset($data->endpoint)){
             $auth = "12345";
             $response = curlPHP($url,$method,$data,$auth);
             $response = json_decode($response);
-            $html = "";
+            $lottery = array();
     
             if(isset($response->status) && $response->status == 200){
+                /*
                 $counter = 0;
                 foreach($response->data as $card){
                     if($counter % 4 == 0) $html .= "<tr>";
@@ -54,7 +55,14 @@ if(isset($data->endpoint)){
                     if($counter % 4 == 3) $html .= "</tr>";
                     $counter++;             
                 }
-                $array = array("status"=>200,"data"=>$html);
+                
+                */
+                foreach($response->data as $card){
+                    $temp = array("name"=>$card->name,"image"=>$card->image);
+                    array_push($lottery,$temp);
+                }
+
+                $array = array("status"=>200,"data"=>$lottery);
                 echo json_encode($array,UTF8);
                 die();
             }
@@ -65,13 +73,12 @@ if(isset($data->endpoint)){
             $auth = "12345";
             $response = curlPHP($url,$method,$data,$auth);
             $response = json_decode($response);
-            $html = "";
     
             if(isset($response->status) && $response->status == 200){
                 $cards = array();
                 foreach($response->data as $card){
-                    $html = "<img src='..\..\api\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
-                    array_push($cards,$html);
+                    $c = array("id"=>$card->id,"name"=>$card->name,"image"=>$card->image);
+                    array_push($cards,$c);
                 }
                 $array = array("status"=>200,"data"=>$cards);
                 echo json_encode($array,UTF8);
@@ -85,12 +92,10 @@ if(isset($data->endpoint)){
                 $auth = "12345";
                 $response = curlPHP($url,$method,$data,$auth);
                 $response = json_decode($response);
-                $html = "";
         
                 if(isset($response->status) && $response->status == 200){
                     $card = $response->data[0];
-                    $html = "<img src='..\..\api\img\lottery\\".$card->image."' id='chosen-card' width='180' height='240' alt='$card->name'>";
-                    $array = array("status"=>200,"data"=>$html);
+                    $array = array("status"=>200,"data"=>$card);
                     echo json_encode($array,UTF8);
                     die();
                 }
