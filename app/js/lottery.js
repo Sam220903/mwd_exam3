@@ -59,11 +59,12 @@ async function getCards(){
     })  
     .catch(error => console.log('error', error));
 }
-    
+
 let running = false;
 function singLottery(){
-    if (cards.length > 0 && !running) {
-        running = true;
+    if (running) return;
+    running = true;
+    if (cards.length > 0) {
         let index = 0;
         document.getElementById('current-card').innerHTML = buildHTMLCard(cards[index]);
         index++;
@@ -74,10 +75,12 @@ function singLottery(){
                 index++;
             } else {
                 clearInterval(interval);
+                running = false;
             }
         }, 5000);
+    } else {
+        running = false;
     }
-    running = false;
 }
 
 let modal_card = document.getElementById('modal-card');
@@ -141,7 +144,10 @@ window.addEventListener("click",function(event) {
 getLottery();
 getCards();
 
-document.getElementById('sing-lottery').addEventListener('click', singLottery);
+document.getElementById('sing-lottery').addEventListener('click', (e) => {
+    e.preventDefault();
+    singLottery();
+});
 
 document.getElementById('search-card').addEventListener('click', (e) => {
     e.preventDefault();
