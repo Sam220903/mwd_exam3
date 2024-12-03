@@ -151,5 +151,5 @@ function saveImage($image){
     $file_name = uniqid().".jpg";
     $file = "../../api/img/lottery/".$file_name;
     file_put_contents($file, $image_base64);
-    return $file_name;
+    return $file_name;  
 }
